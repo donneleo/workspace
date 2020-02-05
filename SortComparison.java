@@ -5,7 +5,7 @@
  *  This class contains static methods that implementing sorting of an array of numbers
  *  using different sort algorithms.
  *
- *  @author
+ *  @author Eoin Donnelly Maugire
  *  @version HT 2020
  */
 
@@ -90,32 +90,39 @@ class SortComparison {
 	 */
 	static double [] quickSort (double a[]){
 
-		//todo: implement the sort
+		//call function which will sort the array
 		return sort(a, 0, a.length);
 
 	}//end quicksort
 	
-	static double []sort(double a[], int low, int high)
+	//function to sort the array
+	private static double []sort(double a[], int low, int high)
 	{
 		if(0 < a.length) 
 		{
+			//uses the partition function to calculate the new partition
 			int partition = partition(a,0,a.length);
+			//sorts before the partition
 			sort(a, 0, partition-1);
+			//sorts after the partition
 			sort(a, partition+1, a.length);
 		}
-		
+		//returns the sorted array to quickSort
 		return a;
 	}
 
-	static int partition (double a[], int low, int high) 
+	//function to calculate the partition
+	private static int partition (double a[], int low, int high) 
 	{
 
+		//the pivot element
 		double pivot = a[a.length];
 		int lo = 0;
 		for(int counter = 0; counter<a.length; counter++) 
 		{
 			if(a[counter] < pivot) 
 			{
+				//increment the low point
 				lo++;
 				double temp = a[lo];
 				a[lo] = a[counter];
@@ -123,10 +130,12 @@ class SortComparison {
 			}
 		}
 
+		//swap around the elements
 		double holder = a[lo + 1];
 		a[lo+1] = a[a.length];
 		a[a.length] = holder;
 		
+		//return the partition point
 		return (lo+1);
 
 	}
