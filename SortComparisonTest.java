@@ -95,7 +95,8 @@ public class SortComparisonTest
      *  Use this main method to create the experiments needed to answer the experimental performance questions of this assignment.
      *
      */
-    public static void main(String[] args) throws FileNotFoundException
+    
+    public void main(String[] args) throws FileNotFoundException
     {
         double[] a = new double[10];
         int i=0;

@@ -224,7 +224,7 @@ class SortComparison {
     public static void main(String[] args) throws FileNotFoundException
     {
         double[] a = new double[1000];     
-        FileReader input = (new FileReader("numbers1000.txt"));
+        FileReader input = (new FileReader("numbersSorted1000.txt"));
         Scanner scanner = new Scanner(input);
         for(int i=0; i<a.length; i++) 
         {
@@ -236,27 +236,27 @@ class SortComparison {
         long startTime = System.nanoTime();
         SortComparison.insertionSort(a);
         long endTime = System.nanoTime();
-        System.out.println("Insertion sort with 1000 elements took " + ((endTime-startTime)/1000000) + " ms.");
+        System.out.println(((endTime-startTime)));
         
         startTime = System.nanoTime();
         SortComparison.selectionSort(a);
         endTime = System.nanoTime();
-        System.out.println("Selection sort with 1000 elements took " + ((endTime-startTime)/1000000) + " ms.");
+        System.out.println(((endTime-startTime)));
         
         startTime = System.nanoTime();
         SortComparison.quickSort(a);
         endTime = System.nanoTime();
-        System.out.println("Quick sort with 1000 elements took " + ((endTime-startTime)/1000000) + " ms.");
+        System.out.println(((endTime-startTime)));
         
         startTime = System.nanoTime();
         SortComparison.mergeSortIterative(a);
         endTime = System.nanoTime();
-        System.out.println("Iterative merge sort with 1000 elements took " + ((endTime-startTime)) + " nanoseconds.");
+        System.out.println(((endTime-startTime)));
         
         startTime = System.nanoTime();
         SortComparison.mergeSortRecursive(a);
         endTime = System.nanoTime();
-        System.out.println("Recurisve merge sort with 1000 elements took " + ((endTime-startTime)) + " nanoseconds.");
+        System.out.println(((endTime-startTime)));
     }
 
 
