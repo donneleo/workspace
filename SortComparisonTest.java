@@ -15,8 +15,25 @@ import java.io.*;
 /**
  *  Test class for SortComparison.java
  *
- *  @author
+ *  @author Eoin Donnelly Maguire - with aid from lecture slides
  *  @version HT 2020
+ *  
+ *  Questions
+ *  a)Then order of input seemed to have the biggest impact on the selection sort. By having nearly 
+ *  ordered elements the algorithm would have to look through the array more times until it was fully ordered.
+ *  
+ *  b)The biggest difference between best and worse time for the different 1000 element lists was Insertion sort. It moved much 
+ *  quicker through the "already sorted" file, because it only needed to check half as many elements.
+ *  
+ *  c)The worst scalability depending on size is insertion sort because it needs to compare more elements. The best scalability 
+ *  is recursive merge sort.
+ *  
+ *  d)The recursive merge sort tended to have around half the run time for the larger data sets. The recursive merge sort had
+ *  similar run time for all the 1000 element data sets, while the iterative method tended to fluctuate more.
+ *  
+ *  e)The insertion sort was the quickest for the 10 element data set, but for each data set thereafter, the recursive merge sort
+ *  was the quickest
+ *
  */
 @RunWith(JUnit4.class)
 public class SortComparisonTest
@@ -37,7 +54,6 @@ public class SortComparisonTest
     @Test
     public void testEmpty()
     {
-    	
     }
 
 
