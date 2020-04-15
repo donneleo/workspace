@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 import java.util.*;
+import java.text.*;
 
 /*
  * A Contest to Meet (ACM) is a reality TV contest that sets three contestants at three random
@@ -31,6 +32,7 @@ public class CompetitionFloydWarshall {
 	public static int speed2;
 	public static int speed3;
 	public static int number_of_vertices;
+	private static DecimalFormat df = new DecimalFormat("0.00");
 	CompetitionFloydWarshall (String filename, int sA, int sB, int sC) throws FileNotFoundException, IOException{
 
 		//TODO
@@ -47,7 +49,7 @@ public class CompetitionFloydWarshall {
 					array[temp][temp2] = 0;
 				}
 				else {
-					array[temp][temp2] = Double.MAX_VALUE;
+					array[temp][temp2] = Double.POSITIVE_INFINITY;
 				}
 			}
 		int i,j,k;
@@ -63,43 +65,85 @@ public class CompetitionFloydWarshall {
 			array[i][j] = scanner.nextDouble();
 			if(scanner.hasNextLine()) scanner.nextLine();
 		}
+	}
 
-		for(int x=0; x<number_of_vertices; x++)
-			for(int y=0; y<number_of_vertices; y++) {
-				System.out.println("distance from " + x + " to " + y + " == " + array[x][y]);
+	public static void FloydWarshall(double[][] array){
+
+		double[][] result = new double[number_of_vertices][number_of_vertices];
+		int a,b,c;
+
+		for(a = 0; a<number_of_vertices; a++)
+			for(b = 0; b<number_of_vertices; b++) {
+				result[a][b] = array[a][b]; 
 			}
 
-	}
-
-	static void FloydWarshall(double[][] array,int vertices){
-		
-		
-		for(int x=0; x<vertices; x++)
-			for(int y=0; y<vertices; y++)
-				for(int z=0; z<vertices; z++) {
-					if(array[y][x] + array[x][z] < array[y][z]) {
-						array[y][z] = array[y][x] + array[x][z];
+		for(c = 0; c<number_of_vertices; c++) {
+			for(a = 0; a<number_of_vertices; a++) {
+				for(b= 0; b<number_of_vertices; b++) {
+					if(result[a][c] + result[c][b] < result[a][b]) {
+						result[a][b] = result[a][c] + result[c][b];
 					}
 				}
+			}		
+		}
+
+
+		printSolution(result); 
+	}
+
+	static void printSolution(double dist[][]) 
+	{ 
+		System.out.println("The following matrix shows the shortest "+ 
+				"distances between every pair of vertices"); 
+		
+		for (int i=0; i<number_of_vertices; ++i) 
+		{ 
+			for (int j=0; j<number_of_vertices; ++j) 
+			{
+				
+				if (dist[i][j]==Double.POSITIVE_INFINITY) 
+					System.out.print("INF "); 
+				else
+					System.out.print(df.format(dist[i][j])+"   "); 
+			} 
+			System.out.println(); 
+		} 
 	}
 
 
-	public static void main(String[] args)throws FileNotFoundException, IOException {
 
-		int answer = timeRequiredforCompetition();
+	public static void main(String[] args){
+
+		try{
+			CompetitionFloydWarshall competition = new CompetitionFloydWarshall("tinyEWD.txt", 1, 2, 3);
+			double answer = timeRequiredforCompetition();
+			System.out.println(answer);
+		}catch (IOException e){
+			System.out.println("Error");
+		}
+
 	}
-
-
-
+	
 	/**
 	 * @return int: minimum minutes that will pass before the three contestants can meet
 	 */
-	public static int timeRequiredforCompetition()throws FileNotFoundException, IOException{
+	public static double timeRequiredforCompetition(){
 
-		CompetitionFloydWarshall competition = new CompetitionFloydWarshall("tinyEWD.txt", 5, 2, 4);
-		//FloydWarshall(array, number_of_vertices); 
+		double longest = 0;
+		try{
+			CompetitionFloydWarshall competition = new CompetitionFloydWarshall("tinyEWD.txt", 5, 2, 4);
+			competition.FloydWarshall(array);
+			for(int i=0; i<number_of_vertices-1; i++)
+				for(int j=0; j<number_of_vertices-1; j++) {
+					if(array[i][j] > array[i+1][j+1]) {
+						longest = array[i][j];
+					}
+				}
+		}catch(IOException e) {
+			System.out.println("Error with File");
+		} 
 
-		return -1;
+		return longest;
 	}
 
 }

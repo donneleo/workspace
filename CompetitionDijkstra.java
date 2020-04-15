@@ -18,6 +18,10 @@ import java.math.*;
  * streets that the contestants can use to traverse the city.
  *
  * This class implements the competition using Dijkstra's algorithm
+ * 
+ * 
+ * Authors: Eoin Donnelly Maguire, Harry Doyle
+ * 
  */
 
 public class CompetitionDijkstra {
@@ -28,6 +32,7 @@ public class CompetitionDijkstra {
 	 */
 
 	public static Node[] array;
+	public static int number_of_vertices;
 	public static int speed1;
 	public static int speed2;
 	public static int speed3;
@@ -37,9 +42,10 @@ public class CompetitionDijkstra {
 		FileReader fr = new FileReader(filename);
 		BufferedReader br = new BufferedReader(fr);
 		Scanner scanner = new Scanner(br);
-		int number_of_vertices = scanner.nextInt();
+
+		number_of_vertices = scanner.nextInt();
 		int number_of_edges = scanner.nextInt();
-	    array = new Node[number_of_vertices];
+		array = new Node[number_of_vertices];
 		speed1 = sA;
 		speed2 = sB;
 		speed3 = sC;
@@ -49,20 +55,22 @@ public class CompetitionDijkstra {
 			Node newNode = new Node(scanner.nextInt());
 			int i = newNode.streetNumber;
 			if(array[i] == null) {
-			array[i] = newNode;
+				array[i] = newNode;
+				//newNode.distance_from_source = Double.POSITIVE_INFINITY;
 			}
 			Node nextNode = new Node(scanner.nextInt());
 			int j = nextNode.streetNumber;
 			if(array[j] == null) {
-			array[j] = nextNode;
+				array[j] = nextNode;
+			//	nextNode.distance_from_source = Double.POSITIVE_INFINITY;
 			}
-			Edge edge = new Edge(array[i], array[j], scanner.nextDouble());
-			array[i].addNeighbourNode(edge);
+				Edge edge = new Edge(array[i], array[j], scanner.nextDouble());
+				array[i].addNeighbourNode(edge);
 			if(scanner.hasNextLine()) scanner.nextLine();
 		}
 		scanner.close();
-		
-		
+
+
 	}
 	public static void computePath(Node startNode) {
 		startNode.setDistanceFromSource(0);
@@ -74,6 +82,7 @@ public class CompetitionDijkstra {
 			for(Edge edge : node.getEdges()) {
 				Node step = edge.getDestination();
 				double weight = edge.getWeight();
+				if(step.distance_from_source != Double.POSITIVE_INFINITY) continue;
 				double minPathDistance = node.getDistanceFromSource() + weight;
 
 				if(minPathDistance<step.getDistanceFromSource()) {
@@ -86,25 +95,35 @@ public class CompetitionDijkstra {
 		}
 	}
 
-    public static ArrayList<Node> getShortestPath(Node targetVerte) {
-        ArrayList<Node> path = new ArrayList<>();
-        
+	public static ArrayList<Node> getShortestPath(Node targetVerte) {
+		ArrayList<Node> path = new ArrayList<>();
 
-        for (Node vertex = targetVerte; vertex != null; vertex = vertex.getPreviousNode()) {
-            path.add(vertex);
-        }
 
-        Collections.reverse(path);
-        return path;
+		for (Node vertex = targetVerte; vertex != null; vertex = vertex.getPreviousNode()) {
+				path.add(vertex);
+		}
+
+		Collections.reverse(path);
+		return path;
+
+
+	}
+
+
+	public static void main(String[] args){
+
+		try{
+			CompetitionDijkstra competition = new CompetitionDijkstra("tinyEWD.txt", 1, 2, 3);
 		
-		
-    }
-	
-	
-	public static void main(String[] args) throws FileNotFoundException, IOException{
-		
-		int answer = timeRequiredforCompetition();
-		System.out.println(answer);
+		}catch(IOException e) {
+			System.out.println("File Not Found");
+		}
+		for(int i=0; i<number_of_vertices; i++)
+			for(int j=0; j<number_of_vertices; j++){
+			computePath(array[i]);
+			ArrayList<Node> list = getShortestPath(array[j]);
+			System.out.println(list.get(list.size()-1).distance_from_source);
+			}
 	}
 
 
@@ -113,38 +132,12 @@ public class CompetitionDijkstra {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public static int timeRequiredforCompetition() throws FileNotFoundException, IOException{
-		
-		CompetitionDijkstra competition = new CompetitionDijkstra("tinyEWD.txt", 1,2,3);
-		computePath(array[2]);
-		ArrayList<Node> result = getShortestPath(array[0]);
-		double length = result.get(result.size()-1).distance_from_source;
-		System.out.println("length 1 = " + length);
-		double time1 =  (length/speed1)*60;
-		
-		
-		computePath(array[7]);
-		ArrayList<Node> result2 = getShortestPath(array[0]);
-		double length2 = result2.get(result2.size()-1).distance_from_source;
-		System.out.println("length 2 = " + length2);
-		double time2 = (length2/speed2)*60;
-			
-		
-		computePath(array[6]);
-		ArrayList<Node> result3 = getShortestPath(array[0]);
-		double length3 = result3.get(result3.size()-1).distance_from_source;
-		System.out.println("length 3 = " + length3);
-		double time3 = (length3/speed3)*60;
-		
-		double showTime = time1;
-		if(showTime<time2) showTime = time2;
-		if(showTime<time3) showTime = time3;
-		
-		int timeForShow = (int)Math.ceil(showTime);
-		
-		if(getShortestPath(array[0]) == null) return -1;
-		else return timeForShow;
-		
-	}
+	/*public static int timeRequiredforCompetition(){
+
+		for(int i=0; i<array.length; i++)
+
+
+		return -1;
+	}*/
 
 }
