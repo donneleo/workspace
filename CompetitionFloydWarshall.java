@@ -27,47 +27,57 @@ public class CompetitionFloydWarshall {
 	 * @param filename: A filename containing the details of the city road network
 	 * @param sA, sB, sC: speeds for 3 contestants
 	 */
-	public static double[][] array;
-	public static int speed1;
-	public static int speed2;
-	public static int speed3;
-	public static int number_of_vertices;
+	private static double[][] array;
+	private static String filename;
+	private static int speed1;
+	private static int speed2;
+	private static int speed3;
+	private static int number_of_vertices;
 	private static DecimalFormat df = new DecimalFormat("0.00");
-	CompetitionFloydWarshall (String filename, int sA, int sB, int sC) throws FileNotFoundException, IOException{
+	CompetitionFloydWarshall (String filename, int sA, int sB, int sC){
 
 		//TODO
-
-		FileReader fr = new FileReader(filename);
-		BufferedReader br = new BufferedReader(fr);
-		Scanner scanner = new Scanner(br);
-		number_of_vertices = scanner.nextInt();
-		int number_of_edges = scanner.nextInt();
-		array = new double[number_of_vertices][number_of_vertices];
-		for(int temp =0; temp<number_of_vertices; temp++)
-			for(int temp2=0; temp2<number_of_vertices; temp2++) {
-				if(temp==temp2) {
-					array[temp][temp2] = 0;
+		try{
+			if(filename!=null){
+				FileReader fr = new FileReader(filename);
+				BufferedReader br = new BufferedReader(fr);
+				Scanner scanner = new Scanner(br);
+				if(!scanner.hasNext() || (!scanner.hasNextInt())) {
+					array = null;
 				}
-				else {
-					array[temp][temp2] = Double.POSITIVE_INFINITY;
+				number_of_vertices = scanner.nextInt();
+				int number_of_edges = scanner.nextInt();
+				array = new double[number_of_vertices][number_of_vertices];
+				if(array.length == 0) {
+					array = null;
+				}
+				for(int temp =0; temp<number_of_vertices; temp++)
+					for(int temp2=0; temp2<number_of_vertices; temp2++) {
+						if(temp==temp2) {
+							array[temp][temp2] = 0;
+						}
+						else {
+							array[temp][temp2] = Double.POSITIVE_INFINITY;
+						}
+					}
+				int i,j;
+				speed1 = sA;
+				speed2 = sB;
+				speed3 = sC;
+				while(scanner.hasNextLine()) 
+				{
+					i = scanner.nextInt();
+					j = scanner.nextInt();
+					array[i][j] = scanner.nextDouble();
+					if(scanner.hasNextLine()) scanner.nextLine();
 				}
 			}
-		int i,j,k;
-
-		speed1 = sA;
-		speed2 = sB;
-		speed3 = sC;
-
-		while(scanner.hasNextLine()) 
-		{
-			i = scanner.nextInt();
-			j = scanner.nextInt();
-			array[i][j] = scanner.nextDouble();
-			if(scanner.hasNextLine()) scanner.nextLine();
+		}catch(IOException e) {
+			array = null;
 		}
 	}
 
-	public static void FloydWarshall(double[][] array){
+	public static double[][] FloydWarshall(double[][] array){
 
 		double[][] result = new double[number_of_vertices][number_of_vertices];
 		int a,b,c;
@@ -86,23 +96,22 @@ public class CompetitionFloydWarshall {
 				}
 			}		
 		}
-
-
-		printSolution(result); 
+		printSolution(result);
+		return result;
 	}
 
 	static void printSolution(double dist[][]) 
 	{ 
 		System.out.println("The following matrix shows the shortest "+ 
 				"distances between every pair of vertices"); 
-		
+
 		for (int i=0; i<number_of_vertices; ++i) 
 		{ 
 			for (int j=0; j<number_of_vertices; ++j) 
 			{
-				
+
 				if (dist[i][j]==Double.POSITIVE_INFINITY) 
-					System.out.print("INF "); 
+					System.out.print("INF  "); 
 				else
 					System.out.print(df.format(dist[i][j])+"   "); 
 			} 
@@ -112,38 +121,58 @@ public class CompetitionFloydWarshall {
 
 
 
-	public static void main(String[] args){
+		public static void main(String[] args){
 
-		try{
-			CompetitionFloydWarshall competition = new CompetitionFloydWarshall("tinyEWD.txt", 1, 2, 3);
+			CompetitionFloydWarshall competition = new CompetitionFloydWarshall("input-J.txt", 98, 70, 84);
 			double answer = timeRequiredforCompetition();
 			System.out.println(answer);
-		}catch (IOException e){
-			System.out.println("Error");
-		}
 
 	}
-	
+	 
+	public static double findHighestValue(double[][] doubles) {
+		double currentHighestValue = Double.MIN_VALUE;
+		for (int row = 0; row < doubles.length; row++) {
+			for (int col = 0; col < doubles[row].length; col++) {
+				double value = doubles[row][col];
+				if (value > currentHighestValue) {
+					currentHighestValue = value;
+				}
+			}
+		}
+		return currentHighestValue; 
+	}
+
 	/**
 	 * @return int: minimum minutes that will pass before the three contestants can meet
 	 */
-	public static double timeRequiredforCompetition(){
+	public static int timeRequiredforCompetition(){
+		//MAKE CITY NULL INSTEAD OF THROWING EXCEPTION
 
 		double longest = 0;
-		try{
-			CompetitionFloydWarshall competition = new CompetitionFloydWarshall("tinyEWD.txt", 5, 2, 4);
-			competition.FloydWarshall(array);
-			for(int i=0; i<number_of_vertices-1; i++)
-				for(int j=0; j<number_of_vertices-1; j++) {
-					if(array[i][j] > array[i+1][j+1]) {
-						longest = array[i][j];
-					}
-				}
-		}catch(IOException e) {
-			System.out.println("Error with File");
-		} 
+		int time=0;
 
-		return longest;
+		if(((speed1>=50) && (speed1 <=100)) && ((speed2>=50) && (speed2<=100)) && ((speed3>=50) && (speed3<=100))) {
+			CompetitionFloydWarshall competition = new CompetitionFloydWarshall(filename, speed1, speed2, speed3);
+			if(array == null) {
+				return -1;
+			}
+			double[][] answer = competition.FloydWarshall(array);
+			if(answer == null) {
+				return -1;
+			}
+			longest = findHighestValue(answer);
+			int slowestWalker = Math.min(Math.min(speed1, speed2), speed3);
+			System.out.println((longest*1000) / slowestWalker);
+			if((longest*1000) / slowestWalker == Double.POSITIVE_INFINITY) {
+				return -1;
+			}
+			time = (int)Math.ceil((longest*1000) / slowestWalker);
+		}
+		else {
+			return -1;
+		}
+
+		return time;
 	}
 
 }

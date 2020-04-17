@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Node implements Comparable<Node>{
 
 		public int streetNumber;
-		public double distance_from_source = Double.MAX_VALUE;
+		public double distance_from_source = Double.POSITIVE_INFINITY;
 		public boolean visited;
 		public ArrayList<Edge> edges = new ArrayList<Edge>();
 		public Node previousNode;
