@@ -48,6 +48,9 @@ public class CompetitionDijkstra {
 				speed2 = sB;
 				speed3 = sC;
 				array = new Node[number_of_vertices];
+				if(array.length == 0) {
+					array = null;
+				}
 				while(scanner.hasNextLine()) 
 				{
 					Node newNode = new Node(scanner.nextInt());
@@ -112,7 +115,7 @@ public class CompetitionDijkstra {
 	}
 
 
-	public static void main(String[] args)throws IOException {
+/*	public static void main(String[] args)throws IOException {
 		CompetitionDijkstra competition = new CompetitionDijkstra(filename, 50, 75, 80);
 		for(int i=0; i<number_of_vertices; i++)
 			for(int j=0; j<number_of_vertices; j++) {
@@ -120,7 +123,7 @@ public class CompetitionDijkstra {
 				ArrayList<Node> list = getShortestPath(array[j]);
 			}
 	}
-
+*/
 	/**
 	 * @return int: minimum minutes that will pass before the three contestants can meet
 	 */
@@ -128,6 +131,11 @@ public class CompetitionDijkstra {
 
 		int time=0;
 		if(((speed1>=50) && (speed1 <=100)) && ((speed2>=50) && (speed2<=100)) && ((speed3>=50) && (speed3<=100))) {
+			CompetitionDijkstra competition = new CompetitionDijkstra(filename, speed1, speed2, speed3);
+			if(array == null) {
+				return -1;
+			}
+			
 			return time;
 		}else {
 			return -1;

@@ -121,14 +121,14 @@ public class CompetitionFloydWarshall {
 
 
 
-		public static void main(String[] args){
+/*		public static void main(String[] args){
 
 			CompetitionFloydWarshall competition = new CompetitionFloydWarshall("input-J.txt", 98, 70, 84);
 			double answer = timeRequiredforCompetition();
 			System.out.println(answer);
 
 	}
-	 
+*/	 
 	public static double findHighestValue(double[][] doubles) {
 		double currentHighestValue = Double.MIN_VALUE;
 		for (int row = 0; row < doubles.length; row++) {

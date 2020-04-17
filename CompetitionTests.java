@@ -20,8 +20,11 @@ public class CompetitionTests {
 		@Test
 	public void testTimeRequiredForDijkstraCompetition() {
 
-		CompetitionDijkstra test1 = new CompetitionDijkstra("tinyEWD.txt", 50, 70, 80);
-		assertEquals("Time Reaquire for Dijkstra Competition", 0, test1.timeRequiredforCompetition());
+		CompetitionDijkstra test1 = new CompetitionDijkstra("input-J.txt", 50, 70, 80);
+		assertEquals("Time Reaquire for Dijkstra Competition", -1, test1.timeRequiredforCompetition());
+		
+		CompetitionDijkstra test2 = new CompetitionDijkstra("tinyEWD.txt", 5, 10, 85);
+		assertEquals("Time Reaquire for Dijkstra Competition", -1, test2.timeRequiredforCompetition());
 	}
 	@Test
 	public void testFWConstructor() {
@@ -42,7 +45,7 @@ public class CompetitionTests {
 		CompetitionFloydWarshall test2 = new CompetitionFloydWarshall("tinyEWD.txt", 50, 75, 80);
 		assertEquals("Time Required for FloydWarshall Competition", 38, test2.timeRequiredforCompetition());
 		
-		CompetitionFloydWarshall test3 = new CompetitionFloydWarshall("input-A.txt", 60, 50, 75);
+		CompetitionFloydWarshall test3 = new CompetitionFloydWarshall("input-A.txt", 50, 50, 50);
 		assertEquals("Time Required for FloydWarshall Competition", -1, test3.timeRequiredforCompetition());
 		
 		CompetitionFloydWarshall test4 = new CompetitionFloydWarshall("input-K.txt", 51, 70, 88);
