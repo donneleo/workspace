@@ -17,6 +17,9 @@ import java.lang.*;
  * streets that the contestants can use to traverse the city.
  *
  * This class implements the competition using Dijkstra's algorithm
+ * @author: Eoin Donnelly Maguire, 
+ * Harry Doyle, Yannick Gloster
+ * 
  */
 
 public class CompetitionDijkstra {
@@ -43,104 +46,138 @@ public class CompetitionDijkstra {
 					array = null;
 				}
 				number_of_vertices = scanner.nextInt();
-				int number_of_edges = scanner.nextInt();
-				speed1 = sA;
-				speed2 = sB;
-				speed3 = sC;
 				array = new Node[number_of_vertices];
 				if(array.length == 0) {
 					array = null;
 				}
-				while(scanner.hasNextLine()) 
-				{
-					Node newNode = new Node(scanner.nextInt());
-					int i = newNode.streetNumber;
-					if(array[i] == null) {
-						array[i] = newNode;
-					}
-					Node nextNode = new Node(scanner.nextInt());
-					int j = nextNode.streetNumber;
-					if(array[j] == null) {
-						array[j] = nextNode;
-					}
-					Edge newEdge = new Edge(nextNode, scanner.nextDouble());
-					array[i].addNeighbourNode(newEdge);
-					if(scanner.hasNextLine()) scanner.nextLine();
-				}
 				for(int i=0; i<number_of_vertices; i++) {
-					for(int j=0; j<array[i].edges.size(); j++)
-					System.out.println(array[i].streetNumber + " -> " + array[i].edges.get(j).destination.streetNumber + " = " + array[i].edges.get(j).weight);
+					array[i] = new Node();
 				}
+				int number_of_edges = scanner.nextInt();
+				for(int j=0; j<number_of_edges; j++) {
+					if(scanner.hasNextLine()) {
+						int start = scanner.nextInt();
+						int destination = scanner.nextInt();
+						double weight = scanner.nextDouble();
+
+						array[start].edges.add(new Edge(destination, weight));
+					}
+				}				
+				speed1 = sA;
+				speed2 = sB;
+				speed3 = sC;
 				scanner.close();
+//Printing method I used to make sure edges were added correctly
+/*				for(int x=0; x<number_of_vertices; x++) {
+					for(int y=0; y<array[x].edges.size(); y++)
+						System.out.println( x + " -> " + array[x].edges.get(y).destination + " = " + array[x].edges.get(y).weight);
+				}
+*/				
 			}
 		}catch(IOException e) {
 			array = null;
 		}
 	}
 
-	public static void computePath(Node startNode) {
-		startNode.setDistanceFromSource(0);
-		PriorityQueue<Node> queue = new PriorityQueue<Node>();
-		queue.add(startNode);
 
-		while(!queue.isEmpty()) {
-			Node node = queue.poll();
-			for(Edge edge : node.getEdges()) {
-				Node step = edge.getDestination();
-				double weight = edge.getWeight();
-				double minPathDistance = node.getDistanceFromSource() + weight;
-
-				if(minPathDistance<step.getDistanceFromSource()) {
-					queue.remove(node);
-					step.setPreviousNode(node);
-					step.setDistanceFromSource(minPathDistance);
-					queue.add(step);
-				}
-			}
-		}
-	}
-	
-	public static ArrayList<Node> getShortestPath(Node targetVerte) {
-		ArrayList<Node> path = new ArrayList<>();
-
-
-		for (Node vertex = targetVerte; vertex != null; vertex = vertex.getPreviousNode()) {
-				path.add(vertex);
-		}
-
-		Collections.reverse(path);
-		return path;
-
-
-	}
-
+	/*
+	 * main method used during the testing of the code
+	 */
 
 /*	public static void main(String[] args)throws IOException {
-		CompetitionDijkstra competition = new CompetitionDijkstra(filename, 50, 75, 80);
-		for(int i=0; i<number_of_vertices; i++)
-			for(int j=0; j<number_of_vertices; j++) {
-				computePath(array[i]);
-				ArrayList<Node> list = getShortestPath(array[j]);
-			}
+		CompetitionDijkstra competition = new CompetitionDijkstra("input-E.txt", 80, 65, 97);
+		int time = timeRequiredforCompetition();
+		System.out.println(time);
 	}
 */
 	/**
 	 * @return int: minimum minutes that will pass before the three contestants can meet
 	 */
-	public int timeRequiredforCompetition(){
+	public static int timeRequiredforCompetition(){
 
-		int time=0;
-		if(((speed1>=50) && (speed1 <=100)) && ((speed2>=50) && (speed2<=100)) && ((speed3>=50) && (speed3<=100))) {
+		double time=-1;
+		if(((speed1>=50) && (speed1 <=100)) && ((speed2>=50) && (speed2<=100)) && ((speed3>=50) && (speed3<=100))) 
+		{
 			CompetitionDijkstra competition = new CompetitionDijkstra(filename, speed1, speed2, speed3);
 			if(array == null) {
 				return -1;
 			}
-			
-			return time;
-		}else {
-			return -1;
+			for(int i = 0; i < array.length; i++) 
+			{
+				double[] distances = new double[array.length];
+				int[] pathway = new int[array.length];
+				ArrayList<Integer> queue = new ArrayList<Integer>();
+				ArrayList<Integer> visited = new ArrayList<Integer>();
+
+				queue.add(i);
+
+				for(int j = 0; j < pathway.length; j++) 
+				{
+					pathway[j] = Integer.MAX_VALUE;
+					distances[j] = Double.POSITIVE_INFINITY;
+				}
+
+				distances[i] = 0;
+				pathway[i] = i;
+
+				while(!queue.isEmpty()) {
+					int min = getShortestPath(queue, distances);
+					int currentNodeIndex = queue.remove(min);
+					Node currentIntersection = array[currentNodeIndex];
+
+					for(int j = 0; j < currentIntersection.edges.size(); j++) 
+					{
+						Edge relaxedEdge = currentIntersection.edges.get(j);
+
+						if(distances[relaxedEdge.getDestination()] > relaxedEdge.getWeight() + distances[currentNodeIndex]) 
+						{
+							distances[relaxedEdge.getDestination()] = relaxedEdge.getWeight() + distances[currentNodeIndex];
+							pathway[relaxedEdge.getDestination()] = currentNodeIndex;
+						}
+						if(!visited.contains(relaxedEdge.getDestination()) && !queue.contains(relaxedEdge.getDestination())) 
+						{
+							queue.add(relaxedEdge.getDestination());
+						}
+					}
+					visited.add(currentNodeIndex);
+				}
+				Arrays.sort(distances);
+				double longestDistance = distances[distances.length-1];
+				for(int j = 0; j < pathway.length; j++) 
+				{
+					if(pathway[j] == Integer.MAX_VALUE) 
+					{
+						return -1;
+					}
+					int slowest = Math.min(Math.min(speed1, speed2), speed3);
+
+					if(time == -1)
+					{
+						time = (longestDistance*1000)/slowest;
+					} else {
+						time = Math.max(time, (longestDistance * 1000) / slowest);
+					}
+				}
+			}
 		}
-		//return time;
+		return (int)(Math.ceil(time));
+	}
+
+
+
+	//return time;
+
+	private static int getShortestPath(ArrayList<Integer> queue, double[] distTo) {
+		int shortest = 0;
+		for(int i = 0; i < queue.size(); i++) 
+		{
+			if(distTo[queue.get(shortest)] > distTo[queue.get(i)]) 
+			{
+				shortest = i;
+			}
+		}
+
+		return shortest;
 	}
 
 }

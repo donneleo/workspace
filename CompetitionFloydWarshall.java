@@ -19,6 +19,8 @@ import java.text.*;
  * streets that the contestants can use to traverse the city.
  *
  * This class implements the competition using Floyd-Warshall algorithm
+ * @author: Eoin Donnelly Maguire
+ * 
  */
 
 public class CompetitionFloydWarshall {
@@ -77,6 +79,10 @@ public class CompetitionFloydWarshall {
 		}
 	}
 
+	/*
+	 * Floyd Warshall method that creates an array of the shortest paths from each start point to each possible end point
+	 * 
+	 */
 	public static double[][] FloydWarshall(double[][] array){
 
 		double[][] result = new double[number_of_vertices][number_of_vertices];
@@ -96,11 +102,15 @@ public class CompetitionFloydWarshall {
 				}
 			}		
 		}
-		printSolution(result);
+//		printSolution(result);
 		return result;
 	}
+	
+	/*
+	 * Method I used to print out the array, in order to check that the distances were being calculated correctly
+	 */
 
-	static void printSolution(double dist[][]) 
+/*	static void printSolution(double dist[][]) 
 	{ 
 		System.out.println("The following matrix shows the shortest "+ 
 				"distances between every pair of vertices"); 
@@ -118,8 +128,10 @@ public class CompetitionFloydWarshall {
 			System.out.println(); 
 		} 
 	}
-
-
+*/
+	/*
+	 * Main method I used while testing the code
+	 */
 
 /*		public static void main(String[] args){
 
@@ -129,6 +141,11 @@ public class CompetitionFloydWarshall {
 
 	}
 */	 
+	
+	/*
+	 * This method searches the the array of updated distances to find the largest value, i.e the longest of all possible paths, and return the value so that
+	 * the maximum time can be calculated
+	 */
 	public static double findHighestValue(double[][] doubles) {
 		double currentHighestValue = Double.MIN_VALUE;
 		for (int row = 0; row < doubles.length; row++) {
@@ -162,7 +179,7 @@ public class CompetitionFloydWarshall {
 			}
 			longest = findHighestValue(answer);
 			int slowestWalker = Math.min(Math.min(speed1, speed2), speed3);
-			System.out.println((longest*1000) / slowestWalker);
+//			System.out.println((longest*1000) / slowestWalker);
 			if((longest*1000) / slowestWalker == Double.POSITIVE_INFINITY) {
 				return -1;
 			}

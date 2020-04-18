@@ -25,11 +25,21 @@ public class CompetitionTests {
 		
 		CompetitionDijkstra test2 = new CompetitionDijkstra("tinyEWD.txt", 5, 10, 85);
 		assertEquals("Time Reaquire for Dijkstra Competition", -1, test2.timeRequiredforCompetition());
+		
+		CompetitionDijkstra test3 = new CompetitionDijkstra("tinyEWD.txt", 50, 75, 80);
+		assertEquals("Time Reaquire for Dijkstra Competition", 38, test3.timeRequiredforCompetition());
+		
+		CompetitionDijkstra test4 = new CompetitionDijkstra("input-E.txt", 80, 65, 97);
+		assertEquals("Time Reaquire for Dijkstra Competition", 22, test4.timeRequiredforCompetition());
+		
+		CompetitionDijkstra test5 = new CompetitionDijkstra("", 50, 50, 50);
+		assertEquals("Time Reaquire for Dijkstra Competition", -1, test5.timeRequiredforCompetition());
 	}
 	@Test
 	public void testFWConstructor() {
 		//TODO
 		new CompetitionFloydWarshall("tinyEWD.txt", 1,2,3);
+		new CompetitionFloydWarshall("input-D.txt", 50, 70, 90);
 		new CompetitionFloydWarshall("FakeFile.txt", 5 , 8 , 10);
 		new CompetitionFloydWarshall("", 70, 50, 75);
 	}
